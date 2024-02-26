@@ -1,0 +1,27 @@
+FROM  ubuntu:latest
+
+
+USER root
+
+ENV CATALINA_HOME /opt/tomcat
+ENV PATH /opt/tomcat/bin:$PATH
+
+RUN apt-get -y update && apt-get -y upgrade
+RUN apt-get -y install openjdk-21-jdk wget
+
+
+RUN mkdir -p /opt/tomcat
+WORKDIR /opt/tomcat
+
+RUN apt install wget -y 
+RUN wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.18/bin/apache-tomcat-10.1.18.tar.gz
+RUN tar -xf apache-tomcat-10.1.18.tar.gz -C /opt/tomcat --strip-components=1
+
+
+COPY ./target/myapp.war /opt/tomcat/webapps/
+
+
+EXPOSE 8080
+
+#SHELL ["/bin/bash", "-c"]
+CMD ["/opt/tomcat/bin/catalina.sh","run"]
